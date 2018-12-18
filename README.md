@@ -1,4 +1,4 @@
-# AndroidUtis
+# LoginWithAmazon
 
 This library provides a simple way to use LoginWithAmazon.
 
