@@ -117,7 +117,7 @@ class AmazonLoginHelper(private val activity: Activity) {
     }
 
 
-    private fun randomString(len: Int): String {
+    fun randomString(len: Int): String {
         val AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
         var rnd = SecureRandom()
 
