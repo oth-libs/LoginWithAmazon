@@ -16,6 +16,31 @@ class AmazonLoginHelper(private val activity: Activity) {
     companion object {
         private val TAG = "AmazonLoginHelper"
         val LIBRARY_VERSION = BuildConfig.VERSION_NAME
+
+        private fun SHA256(text: String): String? {
+            try {
+                val md = MessageDigest.getInstance("SHA-256")
+
+                md.update(text.toByteArray())
+                val digest = md.digest()
+
+                return Base64.encodeToString(digest, Base64.DEFAULT)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+            return null
+        }
+
+
+        fun randomString(len: Int): String {
+            val AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+            var rnd = SecureRandom()
+
+            val sb = StringBuilder(len)
+            for (i in 0 until len)
+                sb.append(AB[rnd.nextInt(AB.length)])
+            return sb.toString()
+        }
     }
 
 
@@ -102,30 +127,7 @@ class AmazonLoginHelper(private val activity: Activity) {
         return null
     }
 
-    private fun SHA256(text: String): String? {
-        try {
-            val md = MessageDigest.getInstance("SHA-256")
 
-            md.update(text.toByteArray())
-            val digest = md.digest()
-
-            return Base64.encodeToString(digest, Base64.DEFAULT)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-        return null
-    }
-
-
-    fun randomString(len: Int): String {
-        val AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
-        var rnd = SecureRandom()
-
-        val sb = StringBuilder(len)
-        for (i in 0 until len)
-            sb.append(AB[rnd.nextInt(AB.length)])
-        return sb.toString()
-    }
 
     fun onResume() {
         Log.e(TAG, "onResume")
