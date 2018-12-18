@@ -13,7 +13,10 @@ import java.security.SecureRandom
 
 class AmazonLoginHelper(private val activity: Activity) {
 
-    private val TAG = "AmazonLoginHelper"
+    companion object {
+        private val TAG = "AmazonLoginHelper"
+        val LIBRARY_VERSION = BuildConfig.VERSION_NAME
+    }
 
 
     private var requestContext: RequestContext = RequestContext.create(activity.applicationContext)
