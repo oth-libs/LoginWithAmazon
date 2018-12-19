@@ -1,6 +1,6 @@
 package com.othlibs.lwa
 
-import android.content.Context
+import android.app.Activity
 import android.util.Base64
 import android.util.Log
 import com.amazon.identity.auth.device.AuthError
@@ -11,7 +11,7 @@ import org.json.JSONObject
 import java.security.MessageDigest
 import java.security.SecureRandom
 
-class AmazonLoginHelper(private val activity: Context) {
+class AmazonLoginHelper(private val activity: Activity) {
 
     companion object {
         private val TAG = "AmazonLoginHelper"
@@ -61,30 +61,36 @@ class AmazonLoginHelper(private val activity: Context) {
                 loginTriggered = false
 
 
-                Log.d(TAG, authorizeResult.redirectURI)
-                Log.d(TAG, authorizeResult.authorizationCode)
-                Log.d(TAG, authorizeResult.clientId)
+                activity.runOnUiThread {
+                    Log.d(TAG, authorizeResult.redirectURI)
+                    Log.d(TAG, authorizeResult.authorizationCode)
+                    Log.d(TAG, authorizeResult.clientId)
 
-                amazonLoginCallback?.onSuccess(authorizeResult.authorizationCode)
+                    amazonLoginCallback?.onSuccess(authorizeResult.authorizationCode)
+                }
             }
 
             /* There was an error during the attempt to authorize the application */
             override fun onError(authError: AuthError) {
                 loginTriggered = false
 
-                Log.e(TAG, "Error during authorization. Please try again.")
-                Log.e(TAG, "AuthError during authorization", authError)
-                authError.printStackTrace()
+                activity.runOnUiThread {
+                    Log.e(TAG, "Error during authorization. Please try again.")
+                    Log.e(TAG, "AuthError during authorization", authError)
+                    authError.printStackTrace()
 
-                amazonLoginCallback?.onError(authError.message)
+                    amazonLoginCallback?.onError(authError.message)
+                }
             }
 
             /* Authorization was cancelled before it could be completed. */
             override fun onCancel(authCancellation: AuthCancellation) {
                 loginTriggered = false
 
-                Log.i(TAG, "Authorization cancelled.")
-                amazonLoginCallback?.onCanceled()
+                activity.runOnUiThread {
+                    Log.i(TAG, "Authorization cancelled.")
+                    amazonLoginCallback?.onCanceled()
+                }
             }
         })
     }
@@ -120,6 +126,7 @@ class AmazonLoginHelper(private val activity: Context) {
 
         return null
     }
+
 
 
     fun onResume() {
