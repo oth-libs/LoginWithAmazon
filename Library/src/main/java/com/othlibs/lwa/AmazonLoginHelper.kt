@@ -6,6 +6,7 @@ import android.util.Log
 import com.amazon.identity.auth.device.AuthError
 import com.amazon.identity.auth.device.api.authorization.*
 import com.amazon.identity.auth.device.api.workflow.RequestContext
+import com.google.gson.Gson
 import org.json.JSONException
 import org.json.JSONObject
 import java.security.MessageDigest
@@ -66,7 +67,8 @@ class AmazonLoginHelper(private val activity: Activity) {
                     Log.d(TAG, authorizeResult.authorizationCode)
                     Log.d(TAG, authorizeResult.clientId)
 
-                    amazonLoginCallback?.onSuccess(authorizeResult.authorizationCode, authorizeResult.redirectURI)
+
+                    amazonLoginCallback?.onSuccess(Gson().toJson(authorizeResult))
                 }
             }
 
@@ -126,7 +128,6 @@ class AmazonLoginHelper(private val activity: Activity) {
 
         return null
     }
-
 
 
     fun onResume() {

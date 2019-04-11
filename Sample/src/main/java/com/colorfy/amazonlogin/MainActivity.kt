@@ -23,8 +23,8 @@ class MainActivity : AppCompatActivity() {
         amazonLoginHelper = AmazonLoginHelper(this)
 
         amazonLoginCallback = object : AmazonLoginCallback {
-            override fun onSuccess(authorizationCode: String, redirectURI: String) {
-                Log.e(TAG, "authorizationCode: $authorizationCode, redirectURI: $redirectURI")
+            override fun onSuccess(response: String) {
+                Log.e(TAG, "response: $response")
             }
 
             override fun onError(errorMessage: String?) {
@@ -34,7 +34,6 @@ class MainActivity : AppCompatActivity() {
             override fun onCanceled() {
                 Log.e(TAG, "onCanceled")
             }
-
         }
         button.setOnClickListener { _ ->
             amazonLoginHelper.login("Penguin", "azerudjso", true, true, amazonLoginCallback)
