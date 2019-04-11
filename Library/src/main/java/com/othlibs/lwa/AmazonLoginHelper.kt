@@ -47,6 +47,7 @@ class AmazonLoginHelper(private val activity: Activity) {
 
     private var requestContext: RequestContext = RequestContext.create(activity.applicationContext)
     private val codeVerifier: String = randomString(16)
+    private lateinit var codeVerifierHashed: String
     private var amazonLoginCallback: AmazonLoginCallback? = null
 
     /**
@@ -67,8 +68,9 @@ class AmazonLoginHelper(private val activity: Activity) {
                     Log.d(TAG, authorizeResult.authorizationCode)
                     Log.d(TAG, authorizeResult.clientId)
 
+                    Log.e(TAG, "codeVerifierHashed: $codeVerifierHashed")
 
-                    amazonLoginCallback?.onSuccess(Gson().toJson(authorizeResult))
+                    amazonLoginCallback?.onSuccess(Gson().toJson(authorizeResult), codeVerifierHashed)
                 }
             }
 
@@ -102,11 +104,13 @@ class AmazonLoginHelper(private val activity: Activity) {
         this.loginTriggered = true
 
         getScope(deviceModel, serial, testDevice, includeNonLive)?.let {
+
+            codeVerifierHashed = SHA256(codeVerifier)!!
             AuthorizationManager.authorize(
                     AuthorizeRequest.Builder(requestContext)
                             .addScopes(it)
                             .forGrantType(AuthorizeRequest.GrantType.AUTHORIZATION_CODE)
-                            .withProofKeyParameters(SHA256(codeVerifier), "S256")
+                            .withProofKeyParameters(codeVerifierHashed, "S256")
                             .build()
             )
         }
