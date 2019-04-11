@@ -66,7 +66,7 @@ class AmazonLoginHelper(private val activity: Activity) {
                     Log.d(TAG, authorizeResult.authorizationCode)
                     Log.d(TAG, authorizeResult.clientId)
 
-                    amazonLoginCallback?.onSuccess(authorizeResult.authorizationCode)
+                    amazonLoginCallback?.onSuccess(authorizeResult.authorizationCode, authorizeResult.redirectURI)
                 }
             }
 
