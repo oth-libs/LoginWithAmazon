@@ -105,7 +105,13 @@ class AmazonLoginHelper(private val activity: Activity) {
 
         getScope(deviceModel, serial, testDevice, includeNonLive)?.let {
 
-            codeVerifierHashed = SHA256(codeVerifier)!!
+
+            //            codeVerifierHashed = SHA256(codeVerifier)!!
+//            Log.i(TAG, "codeVerifierHashed: $codeVerifierHashed")
+
+            codeVerifierHashed = JavaExt.sha256(codeVerifier)
+            Log.i(TAG, "codeVerifierHashed: $codeVerifierHashed")
+
             AuthorizationManager.authorize(
                     AuthorizeRequest.Builder(requestContext)
                             .addScopes(it)
