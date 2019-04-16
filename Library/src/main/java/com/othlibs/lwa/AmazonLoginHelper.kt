@@ -1,7 +1,6 @@
 package com.othlibs.lwa
 
 import android.app.Activity
-import android.util.Base64
 import android.util.Log
 import com.amazon.identity.auth.device.AuthError
 import com.amazon.identity.auth.device.api.authorization.*
@@ -9,44 +8,17 @@ import com.amazon.identity.auth.device.api.workflow.RequestContext
 import com.google.gson.Gson
 import org.json.JSONException
 import org.json.JSONObject
-import java.security.MessageDigest
-import java.security.SecureRandom
 
 class AmazonLoginHelper(private val activity: Activity) {
 
     companion object {
         private val TAG = "AmazonLoginHelper"
         val LIBRARY_VERSION = BuildConfig.VERSION_NAME
-
-        private fun SHA256(text: String): String? {
-            try {
-                val md = MessageDigest.getInstance("SHA-256")
-
-                md.update(text.toByteArray())
-                val digest = md.digest()
-
-                return Base64.encodeToString(digest, Base64.DEFAULT)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-            return null
-        }
-
-
-        fun randomString(len: Int): String {
-            val AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
-            var rnd = SecureRandom()
-
-            val sb = StringBuilder(len)
-            for (i in 0 until len)
-                sb.append(AB[rnd.nextInt(AB.length)])
-            return sb.toString()
-        }
     }
 
 
     private var requestContext: RequestContext = RequestContext.create(activity.applicationContext)
-    private val codeVerifier: String = randomString(16)
+    private val codeVerifier: String = CodeChallengeGenerator.getInstance().codeVerifier
     private lateinit var codeVerifierHashed: String
     private var amazonLoginCallback: AmazonLoginCallback? = null
 
@@ -106,10 +78,7 @@ class AmazonLoginHelper(private val activity: Activity) {
         getScope(deviceModel, serial, testDevice, includeNonLive)?.let {
 
 
-            //            codeVerifierHashed = SHA256(codeVerifier)!!
-//            Log.i(TAG, "codeVerifierHashed: $codeVerifierHashed")
-
-            codeVerifierHashed = JavaExt.sha256(codeVerifier)
+            codeVerifierHashed = CodeChallengeGenerator.getInstance().generateCodeChallenge(codeVerifier, CodeChallengeGenerator.SHA_256)
             Log.i(TAG, "codeVerifierHashed: $codeVerifierHashed")
 
             AuthorizationManager.authorize(
