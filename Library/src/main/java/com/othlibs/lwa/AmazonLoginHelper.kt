@@ -42,7 +42,7 @@ class AmazonLoginHelper(private val activity: Activity) {
 
                     Log.e(TAG, "codeVerifierHashed: $codeVerifierHashed")
 
-                    amazonLoginCallback?.onSuccess(Gson().toJson(authorizeResult), codeVerifierHashed)
+                    amazonLoginCallback?.onSuccess(Gson().toJson(authorizeResult), codeVerifier, codeVerifierHashed)
                 }
             }
 

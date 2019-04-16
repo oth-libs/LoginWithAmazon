@@ -23,8 +23,8 @@ class MainActivity : AppCompatActivity() {
         amazonLoginHelper = AmazonLoginHelper(this)
 
         amazonLoginCallback = object : AmazonLoginCallback {
-            override fun onSuccess(response: String, codeVerifier: String) {
-                Log.e(TAG, "response: $response, codeVerifier: $codeVerifier")
+            override fun onSuccess(response: String, codeVerifier: String, codeVerifierHashed: String) {
+                Log.e(TAG, "response: $response, codeVerifier: $codeVerifier, codeVerifierHashed: $codeVerifierHashed")
             }
 
             override fun onError(errorMessage: String?) {
